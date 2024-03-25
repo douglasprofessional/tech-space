@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.login{
+    @apply
+    w-full
+    h-screen;
+}
+
+.login__content{
+    @apply
+    grid
+    grid-cols-1
+    w-full
+    h-full;
+}
+/* sm: */
+@media(min-width: 640px){
+    .login__content{
+        @apply
+        grid-cols-2;
+    }
+}
+
+.login__column:first-of-type{
+    @apply
+    hidden;
+}
+/* sm: */
+@media(min-width: 640px){
+    .login__column:first-of-type{
+        @apply
+        block;
+    }
+}
+
+.login__column:last-of-type{
+    @apply
+    w-full
+    flex
+    flex-col
+    justify-center
+    items-center
+    gap-5;
+}
+
+.login__illustration{
+    @apply
+    w-full
+    h-full
+    object-cover;
+}
+
+.login__title{
+    @apply
+    text-4xl
+    text-orange-200
+    text-center
+    font-semibold;
+}
+
+.login__form{
+    @apply
+    flex
+    flex-col
+    gap-4
+    w-full
+    max-w-[400px]
+    bg-purple-100
+    mx-auto
+    p-8
+    rounded-lg;
+}
+
+.login__form-subtitle{
+    @apply
+    text-2xl 
+    dark:text-white 
+    text-center 
+    font-bold;
+}
+
+.login__form-group{
+    @apply
+    w-full
+    flex
+    flex-col
+    gap-1;
+}
+
+.login__form-label{
+    @apply
+    w-full
+    text-white;
+}
+
+.login__form-input{
+    @apply
+    w-full
+    rounded-lg
+    text-white
+    bg-purple-200
+    p-2
+    border-2
+    border-purple-300
+    focus:bg-orange-200
+    focus:outline-none
+    focus:placeholder-transparent;
+}
+
+.login__form-button{
+    @apply
+    w-fit
+    flex
+    justify-center
+    text-white
+    py-2
+    hover:cursor-pointer
+    hover:animate-pulse
+    mx-auto;
+}
+
+button.login__form-submit{
+    @apply
+    w-full
+    bg-orange-200
+    rounded-lg
+    enabled:shadow-orange-200/50
+    enabled:hover:shadow-orange-100/40
+    disabled:bg-orange-100
+    disabled:shadow-none
+    text-white
+    font-semibold
+    p-2;
+}
