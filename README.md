@@ -18,9 +18,16 @@ v20.9.0
 
 ---
 
-### Module installations
+### Create app
 
 * yarn create vite (name, react, typescript)
+
+---
+
+### Other facilities
+* cd app
+* yarn add tailwindcss postcss autoprefixer -D && npx tailwindcss init -p
+* yarn add react-router-dom
 
 ---
 

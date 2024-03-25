@@ -1,10 +1,14 @@
 import React from "react"
+import { Route, Routes } from "react-router-dom"
+import { RoutesPaths } from "./models/enums/routesPaths"
 
 function App() {
 
   return (
     <React.Fragment>
-      <h1>Hello Vite</h1>
+      <Routes>
+        <Route path={RoutesPaths.Login} />
+      </Routes>
     </React.Fragment>
   )
 }
