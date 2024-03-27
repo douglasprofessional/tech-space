@@ -16,11 +16,16 @@
     h-full;
 }
 /* sm: */
-@media(min-width: 640px){
+@media(min-width: 1023px){
     .login__content{
         @apply
         grid-cols-2;
     }
+}
+
+.login__column{
+    @apply
+    h-full;
 }
 
 .login__column:first-of-type{
@@ -28,7 +33,7 @@
     hidden;
 }
 /* sm: */
-@media(min-width: 640px){
+@media(min-width: 1023px){
     .login__column:first-of-type{
         @apply
         block;
@@ -48,7 +53,7 @@
 .login__illustration{
     @apply
     w-full
-    h-full
+    h-inherit
     object-cover;
 }
 
@@ -60,7 +65,8 @@
     font-semibold;
 }
 
-.login__form{
+.login__form,
+.signup__form{
     @apply
     flex
     flex-col
@@ -73,7 +79,8 @@
     rounded-lg;
 }
 
-.login__form-subtitle{
+.login__form-subtitle,
+.signup__form-subtitle{
     @apply
     text-2xl 
     dark:text-white 
@@ -81,7 +88,8 @@
     font-bold;
 }
 
-.login__form-group{
+.login__form-group,
+.signup__form-group{
     @apply
     w-full
     flex
@@ -89,13 +97,15 @@
     gap-1;
 }
 
-.login__form-label{
+.login__form-label,
+.signup__form-label{
     @apply
     w-full
     text-white;
 }
 
-.login__form-input{
+.login__form-input,
+.signup__form-input{
     @apply
     w-full
     rounded-lg
@@ -109,7 +119,8 @@
     focus:placeholder-transparent;
 }
 
-.login__form-button{
+.login__form-button,
+.signup__form-button{
     @apply
     w-fit
     flex
@@ -121,7 +132,8 @@
     mx-auto;
 }
 
-button.login__form-submit{
+button.login__form-submit,
+button.signup__form-submit{
     @apply
     w-full
     bg-orange-200

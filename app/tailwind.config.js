@@ -19,6 +19,10 @@ export default {
           200: '#14023E',
           300: '#0E012C',
         }
+      },
+      height: {
+        initial: 'initial',
+        inherit: 'inherit'
       }
     },
   },
