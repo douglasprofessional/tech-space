@@ -28,6 +28,7 @@ v20.9.0
 * cd app
 * yarn add tailwindcss postcss autoprefixer -D && npx tailwindcss init -p
 * yarn add react-router-dom
+* yarn add firebase
 
 ---
 
