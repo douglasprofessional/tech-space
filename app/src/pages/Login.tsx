@@ -6,6 +6,20 @@ import "./Login.css"
 function Login(){
     const [displayLogin, setDisplayLogin] = useState(true)
     const [displaySignUp, setDisplaySignUp] = useState(false)
+    const [loginEmailInput, setLoginEmailInput] = useState('')
+    const [loginPasswordInput, setLoginPasswordInput] = useState('')
+    const [isLoginFormValid, setIsLoginFormValid] = useState(true)
+    const [signUpEmailInput, setSignUpEmailInput] = useState('')
+    const [signUpPasswordInput, setSignUpPasswordInput] = useState('')
+    const [isSignUpFormValid, setIsSignUpFormValid] = useState(true)
+
+    const errorMessage = (
+        <div className="login__form-group">
+            <p className="login__form-valid">
+                Preencha os campos e tente novamente
+            </p>
+        </div>        
+    )
 
     const handleDisplayCreateAccount = (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -25,6 +39,52 @@ function Login(){
         setDisplaySignUp(false)
     }
 
+    const handleInputForm = (
+        event: React.FormEvent<HTMLInputElement>,
+        state: React.Dispatch<React.SetStateAction<string>>
+    ) => {
+        const eventTarget = event.currentTarget as HTMLInputElement
+        const eventValue = eventTarget.value
+
+        eventValue && state(eventValue)
+    }
+
+    const handleExecuteLogin = (
+        event: React.MouseEvent<HTMLFormElement, MouseEvent>
+    ) => {
+        event.preventDefault()        
+
+        loginEmailInput.trim().length > 0 && loginPasswordInput.trim().length > 0
+        ? setIsLoginFormValid(true)
+        : setIsLoginFormValid(false)
+
+        console.log('DADOS DO INPUT', {
+            email: loginEmailInput,
+            password: loginPasswordInput
+        })
+        
+        setLoginEmailInput('')
+        setLoginPasswordInput('')
+    }
+
+    const handleExecuteSignUp = (
+        event: React.MouseEvent<HTMLFormElement, MouseEvent>
+    ) => {
+        event.preventDefault()        
+
+        signUpEmailInput.trim().length > 0 && signUpPasswordInput.trim().length > 0
+        ? setIsSignUpFormValid(true)
+        : setIsSignUpFormValid(false)
+
+        console.log('DADOS DO INPUT - SIGNUP', {
+            email: signUpEmailInput,
+            password: signUpPasswordInput
+        })
+        
+        setSignUpEmailInput('')
+        setSignUpPasswordInput('')
+    }
+
     return (
         <React.Fragment>
             <div className="login">
@@ -39,7 +99,7 @@ function Login(){
                         </h1>
 
                         {displayLogin && (
-                            <form className="login__form">
+                            <form onSubmit={handleExecuteLogin} className="login__form">
                                 <div className="login__form-group">
                                     <h2 className="login__form-subtitle">
                                         Login
@@ -53,11 +113,13 @@ function Login(){
                                         E-mail
                                     </label>
                                     <input
-                                        className="login__form-input"
+                                        className={`login__form-input ${!isLoginFormValid ? `login__form-input--invalid` : ``}`}
                                         type="email"
                                         name="email"
                                         id="email"
                                         placeholder="Digite seu melhor email"
+                                        value={loginEmailInput}
+                                        onChange={(e) => handleInputForm(e, setLoginEmailInput)}
                                     />
                                 </div>
 
@@ -68,11 +130,13 @@ function Login(){
                                         Senha
                                     </label>
                                     <input
-                                        className="login__form-input"
+                                        className={`login__form-input ${!isLoginFormValid ? `login__form-input--invalid` : ``}`}
                                         type="password"
                                         name="password"
                                         id="password"
                                         placeholder="Digite sua senha"
+                                        value={loginPasswordInput}
+                                        onChange={(e) => handleInputForm(e, setLoginPasswordInput)}
                                         minLength={6}
                                         maxLength={10}
                                     />
@@ -92,16 +156,17 @@ function Login(){
                                     <button 
                                         className="login__form-submit" 
                                         type="submit"
-                                        onClick={(event) => handleDisplayLogin(event)}
                                         >
                                         Entrar
                                     </button>
                                 </div>
+
+                                { !isLoginFormValid && errorMessage }
                             </form>
                         )}
 
                         {displaySignUp && (
-                            <form className="signup__form">
+                            <form onSubmit={handleExecuteSignUp} className="signup__form">
                                 <div className="signup__form-group">
                                     <h2 className="signup__form-subtitle">
                                         Criar conta
@@ -115,11 +180,13 @@ function Login(){
                                         E-mail
                                     </label>
                                     <input
-                                        className="signup__form-input"
+                                        className={`signup__form-input ${!isSignUpFormValid ? `signup__form-input--invalid` : ``}`}
                                         type="email"
                                         name="email"
                                         id="email"
                                         placeholder="Digite seu melhor email"
+                                        value={signUpEmailInput}
+                                        onChange={(e) => handleInputForm(e, setSignUpEmailInput)}
                                     />
                                 </div>
 
@@ -130,11 +197,13 @@ function Login(){
                                         Senha
                                     </label>
                                     <input
-                                        className="signup__form-input"
+                                        className={`signup__form-input ${!isSignUpFormValid ? `signup__form-input--invalid` : ``}`}
                                         type="password"
                                         name="password"
                                         id="password"
                                         placeholder="Crie sua senha (de 6 a 10 caracteres)"
+                                        value={signUpPasswordInput}
+                                        onChange={(e) => handleInputForm(e, setSignUpPasswordInput)}
                                         minLength={6}
                                         maxLength={10}
                                     />
@@ -144,7 +213,7 @@ function Login(){
                                     <button 
                                         className="signup__form-button" 
                                         type="button"
-                                        onClick={(event) => handleDisplayCreateAccount(event)}
+                                        onClick={(event) => handleDisplayLogin(event)}
                                         >
                                         Fazer login
                                     </button>
@@ -154,11 +223,12 @@ function Login(){
                                     <button 
                                         className="signup__form-submit" 
                                         type="submit"
-                                        onClick={(event) => handleDisplayLogin(event)}
                                         >
                                         Criar conta
                                     </button>
                                 </div>
+
+                                { !isSignUpFormValid && errorMessage }
                             </form>                            
                         )}
                     </div>

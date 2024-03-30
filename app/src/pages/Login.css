@@ -119,6 +119,14 @@
     focus:placeholder-transparent;
 }
 
+.login__form-input--invalid,
+.signup__form-input--invalid{
+    @apply
+    bg-red-700
+    border-red-700
+    text-white;
+}
+
 .login__form-button,
 .signup__form-button{
     @apply
@@ -145,4 +153,12 @@ button.signup__form-submit{
     text-white
     font-semibold
     p-2;
+}
+
+.login__form-valid,
+.signup__form-valid{
+    @apply
+    w-full
+    text-sm
+    text-red-700;
 }
