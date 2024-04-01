@@ -9,6 +9,7 @@ Software with user flow and content posting, developed with ReactJS and TaiwinsC
 * [React Spring](https://www.react-spring.io/)
 * [Vite](https://vitejs.dev/)
 * [TailwindCSS](https://tailwindcss.com/docs/installation)
+* [Toastify](https://fkhadra.github.io/react-toastify/introduction/)
 
 ---
 
@@ -29,6 +30,7 @@ v20.9.0
 * yarn add tailwindcss postcss autoprefixer -D && npx tailwindcss init -p
 * yarn add react-router-dom
 * yarn add firebase
+* yarn add react-toastify
 
 ---
 
