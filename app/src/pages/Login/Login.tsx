@@ -1,10 +1,13 @@
 import React, { useState } from "react"
-import { createUserWithEmailAndPassword } from "firebase/auth"
+import { 
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword
+} from "firebase/auth"
 import { toast } from "react-toastify";
 import "react-toastify/ReactToastify.css"
 
-import loginImg from "../assets/daniel-korpai-HyTwtsk8XqA-unsplash.jpg"
-import { auth } from "../firebase/firebaseConnection";
+import loginImg from "../../assets/daniel-korpai-HyTwtsk8XqA-unsplash.jpg"
+import { auth } from "../../firebase/firebaseConnection";
 import "./Login.css"
 
 function Login(){
@@ -54,17 +57,54 @@ function Login(){
         eventValue && state(eventValue)
     }
 
-    const handleExecuteLogin = (
+    const handleExecuteLogin = async (
         event: React.MouseEvent<HTMLFormElement, MouseEvent>
     ) => {
+        setIsLoading(true)
+
         event.preventDefault()        
 
         loginEmailInput.trim().length > 0 && loginPasswordInput.trim().length > 0
         ? setIsLoginFormValid(true)
         : setIsLoginFormValid(false)
         
-        setLoginEmailInput('')
-        setLoginPasswordInput('')
+        await signInWithEmailAndPassword(
+
+            auth, 
+            loginEmailInput,
+            loginPasswordInput
+
+        ).then(() => {
+
+            setIsLoading(false)
+
+            setDisplayLogin(true)
+            setDisplaySignUp(false)
+
+            toast.success('Bem vindo de volta!')
+        
+            setLoginEmailInput('')
+            setLoginPasswordInput('')
+
+        }).catch((err: { code: string }) => {
+            
+            setIsLoading(false)
+
+            if (err.code === 'auth/wrong-password') {
+
+                toast.error('Senha incorreta!')
+
+            }else if (err.code === 'auth/user-not-found') {
+
+                toast.warning('E-mail não existe. Crie sua conta!')
+
+            } else {
+
+                toast.error('Erro ao fazer login!')
+                setIsLoginFormValid(false)
+
+            }
+        })
     }
 
     const handleExecuteSignUp = async (
@@ -79,9 +119,11 @@ function Login(){
         : setIsSignUpFormValid(false)
 
         await createUserWithEmailAndPassword(
+
             auth, 
             signUpEmailInput,
             signUpPasswordInput
+
         ).then(() => {
 
             setDisplayLogin(true)
@@ -93,11 +135,17 @@ function Login(){
         }).catch((err: { code: string }) => {
 
             if (err.code === 'auth/weak-password') {
+
                 toast.warning('Senha muito fraca, utilize outra senha!')
+
             }else if (err.code === 'auth/email-already-in-use') {
+
                 toast.warning('E-mail já cadastrado!')
+
             } else {
+
                 toast.error('Erro ao criar usuário!')
+
             }
 
             setIsLoading(false)
@@ -177,11 +225,12 @@ function Login(){
                                 </div>
 
                                 <div className="login__form-group">
-                                    <button 
+                                    <button
+                                        disabled={isLoading} 
                                         className="login__form-submit" 
                                         type="submit"
                                         >
-                                        Entrar
+                                        { isLoading ? 'Carregando...' : 'Fazer login' }
                                     </button>
                                 </div>
 

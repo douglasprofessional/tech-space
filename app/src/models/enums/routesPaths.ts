@@ -1,3 +1,4 @@
 export enum RoutesPaths {
-    Login = "/login"
+    Login = "/login",
+    Feed = "/feed"
 }
