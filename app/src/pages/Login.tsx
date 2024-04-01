@@ -1,11 +1,14 @@
 import React, { useState } from "react"
+import { createUserWithEmailAndPassword } from "firebase/auth"
 
 import loginImg from "../assets/daniel-korpai-HyTwtsk8XqA-unsplash.jpg"
+import { auth } from "../firebase/firebaseConnection";
 import "./Login.css"
 
 function Login(){
     const [displayLogin, setDisplayLogin] = useState(true)
     const [displaySignUp, setDisplaySignUp] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const [loginEmailInput, setLoginEmailInput] = useState('')
     const [loginPasswordInput, setLoginPasswordInput] = useState('')
     const [isLoginFormValid, setIsLoginFormValid] = useState(true)
@@ -57,28 +60,47 @@ function Login(){
         loginEmailInput.trim().length > 0 && loginPasswordInput.trim().length > 0
         ? setIsLoginFormValid(true)
         : setIsLoginFormValid(false)
-
-        console.log('DADOS DO INPUT', {
-            email: loginEmailInput,
-            password: loginPasswordInput
-        })
         
         setLoginEmailInput('')
         setLoginPasswordInput('')
     }
 
-    const handleExecuteSignUp = (
+    const handleExecuteSignUp = async (
         event: React.MouseEvent<HTMLFormElement, MouseEvent>
     ) => {
+        setIsLoading(true)
+
         event.preventDefault()        
 
         signUpEmailInput.trim().length > 0 && signUpPasswordInput.trim().length > 0
         ? setIsSignUpFormValid(true)
         : setIsSignUpFormValid(false)
 
-        console.log('DADOS DO INPUT - SIGNUP', {
-            email: signUpEmailInput,
-            password: signUpPasswordInput
+        await createUserWithEmailAndPassword(
+            auth, 
+            signUpEmailInput,
+            signUpPasswordInput
+        ).then(() => {
+
+            setDisplayLogin(true)
+            setDisplaySignUp(false)
+            setIsLoading(false)
+
+            console.log('Usuário criado!')
+
+        }).catch((err: { code: string }) => {
+
+            if (err.code === 'auth/weak-password') {
+                console.log('Senha muito fraca, utilize outra senha!')
+            }else if (err.code === 'auth/email-already-in-use') {
+                console.log('E-mail já cadastrado!')
+            } else {
+                console.log('Erro ao criar usuário!')
+            }
+
+            setIsLoading(false)
+            setIsSignUpFormValid(false)
+
         })
         
         setSignUpEmailInput('')
@@ -223,8 +245,9 @@ function Login(){
                                     <button 
                                         className="signup__form-submit" 
                                         type="submit"
+                                        disabled={isLoading}
                                         >
-                                        Criar conta
+                                        { isLoading ? 'Carregando...' : 'Criar conta' }
                                     </button>
                                 </div>
 
