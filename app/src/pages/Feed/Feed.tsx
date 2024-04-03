@@ -1,9 +1,10 @@
 import React from "react"
+import Navbar from "../../components/Navbar/Navbar"
 
 function Feed(){
     return (
         <React.Fragment>
-            <h1>Feed</h1>
+            <Navbar />
         </React.Fragment>
     )
 }

@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.navbar{
+    @apply
+    w-full
+    mx-auto
+    bg-purple-100;
+}
+
+.navbar__content{
+    @apply
+    w-full
+    flex
+    flex-col
+    flex-wrap
+    justify-between
+    items-center
+    gap-5
+    p-5;
+}
+@media(min-width: 768px){
+    .navbar__content{
+        @apply
+        flex-row;
+    }
+}
+
+.navbar__title{
+    @apply
+    flex-1
+    text-4xl
+    text-center
+    text-orange-200;
+}
+
+.navbar__button{
+    @apply
+    inline-flex
+    items-center
+    gap-1
+    rounded-md
+    border-0
+    py-2
+    px-3
+    text-sm
+    whitespace-nowrap
+    font-semibold
+    shadow-sm;
+}
+
+.navbar__button--red[type='button']{
+    @apply
+    bg-red-500
+    text-white;
+}
+.navbar__button--red:hover{
+    @apply
+    bg-red-600;
+}
+
+.navbar__button--orange[type='button']{
+    @apply
+    bg-orange-200
+    text-white;
+}
+.navbar__button--orange:hover{
+    @apply
+    bg-orange-600;
+}
+
+.navbar__button-svg{
+    @apply
+    w-6
+    h-6;
+}
