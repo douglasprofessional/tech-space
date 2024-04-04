@@ -95,10 +95,14 @@
     bg-purple-200
     p-2
     border-2
-    border-purple-300
-    focus:bg-orange-200
-    focus:outline-none
-    focus:placeholder-transparent;
+    border-purple-300;
+}
+
+.modal__post-input:focus{
+    @apply
+    border-orange-200
+    outline-none
+    placeholder-transparent;   
 }
 
 .modal__post-input--invalid{

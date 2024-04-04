@@ -1,10 +1,29 @@
-import React, { useState, useRef, Fragment } from "react"
+import React, { 
+    useState, 
+    useRef, 
+    Fragment 
+} from "react"
 
+import { addDoc, collection } from "firebase/firestore"
+import { 
+    ref, 
+    uploadBytesResumable, 
+    getDownloadURL 
+} from "firebase/storage"
 import { signOut } from "firebase/auth"
-import { auth } from "../../firebase/firebaseConnection"
+import { 
+    auth, 
+    db, 
+    storage 
+} from "../../firebase/firebaseConnection"
 
 import { toast } from "react-toastify"
-import { Transition, Dialog } from "@headlessui/react"
+import { 
+    Transition, 
+    Dialog 
+} from "@headlessui/react"
+
+import { Post } from "../../models/interfaces/Post"
 
 import "./Navbar.css"
 import "./Modal.css"
@@ -15,13 +34,133 @@ function Navbar() {
     const [isNewPostFormValid, setIsNewPostFormValid] = useState(true)
     const [progress, setProgress] = useState(0)
     const [imgUrl, setImgUrl] = useState('')
+    const [postAuthorInput, setPostAuthorInput] = useState('')
+    const [postTitleInput, setPostTitleInput] = useState('')
+    const [postContentInput, setPostContentInput] = useState('')
+    const [postImgFile, setPostImgFile] = useState<File | null>(null)
 
     const cancelButtonRef = useRef(null)
 
     const handleSignOut = async() => {
         await signOut(auth)
-        .then(() => toast.success('LogOut feito com sucesso!'))
+        .then(() => toast.success('Logout feito com sucesso!'))
         .catch(() => toast.error('Ocorreu um erro, tente novamente!'))
+    }
+
+    const handleInputForm = (
+        event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+        state: React.Dispatch<React.SetStateAction<string>>
+    ) => {
+        const eventTarget = event.currentTarget as HTMLInputElement
+        const eventValue = eventTarget.value
+
+        eventValue && state(eventValue)
+    }
+
+    const handlePostImageInput = (
+        event: React.FormEvent<HTMLInputElement>
+    ) => {
+        const eventTarget = event.target as HTMLInputElement
+        const file: File | null = eventTarget.files && eventTarget.files[0]
+
+        setPostImgFile(file)
+    }
+
+    const handleCreateNewPost = (
+        event: React.FormEvent<HTMLFormElement>
+    ) => {
+        event.preventDefault()        
+
+        setIsLoading(true)
+
+        if(
+            postAuthorInput.trim().length > 0 && 
+            postTitleInput.trim().length > 0 && 
+            postContentInput.trim().length > 0
+        ){
+            setIsNewPostFormValid(true)
+        } else {
+            setIsNewPostFormValid(false)
+        }
+
+        if(!postImgFile) return
+
+        const storageRef = ref(storage, `images/${postImgFile.name}`)
+        const uploadTask = uploadBytesResumable(storageRef, postImgFile)
+
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                
+                setProgress(progress)
+            },
+            () => {
+                toast.error('Ocorreu um erro!')
+            },
+            async () => {
+                void(
+                    await getDownloadURL(uploadTask.snapshot.ref)
+                    .then(async (url) => {
+                        if(url){
+                            setImgUrl(url)
+
+                            const currentDate = getCurrentDate()
+
+                            const postObject: Post = {
+                                author: postAuthorInput,
+                                title: postTitleInput,
+                                content: postContentInput,
+                                imageUrl: url,
+                                userEmail: 'teste1@teste.com',
+                                creationDate: currentDate
+                            }
+
+                            await addDoc(collection(db, 'posts'), postObject)
+                            .then(() => {
+                                setIsLoading(false)
+
+                                setPostAuthorInput('')
+                                setPostTitleInput('')
+                                setPostContentInput('')
+                                setImgUrl('')
+                                setProgress(0)
+                                setOpenModal(false)
+
+                                toast.success('Post criado com sucesso!')
+                            })
+                            .catch(() => {
+                                setIsLoading(false)
+
+                                setPostAuthorInput('')
+                                setPostTitleInput('')
+                                setPostContentInput('')
+                                setImgUrl('')
+                                setProgress(0)
+                                setOpenModal(false)
+
+                                toast.success('Erro ao criar um post, tente novamente!')
+                            })
+                        }
+                    })
+                    .catch(() => {
+                        setIsLoading(false)
+
+                        toast.error('Erro ao fazer upload da imagem!')
+                    })
+                )
+            }
+        )
+    }
+
+    const getCurrentDate = (): string => {
+        const date = new Date()
+
+        const currentDay = String(date.getDate()).padStart(2, '0')
+        const currentMounth = String(date.getMonth() + 1).padStart(2, '0')
+        const currentYear = date.getFullYear()
+
+        return `${currentDay}/${currentMounth}/${currentYear}`
     }
 
     return (
@@ -97,6 +236,7 @@ function Navbar() {
                                         <div className="modal__post-panel">
                                             <form
                                                 className="modal__post-form"
+                                                onSubmit={handleCreateNewPost}
                                                 >
                                                 <div className="modal__post-group">
                                                     <h2 className="modal__post-title">
@@ -110,6 +250,7 @@ function Navbar() {
                                                         type="text"
                                                         placeholder="Digite seu nome"
                                                         className={`modal__post-input ${!isNewPostFormValid ? `modal__post-input--invalid` : ``}`}
+                                                        onChange={(event) => handleInputForm(event, setPostAuthorInput)}
                                                     />
                                                 </div>
 
@@ -119,6 +260,7 @@ function Navbar() {
                                                         type="text"
                                                         placeholder="Digite o título do post"
                                                         className={`modal__post-input ${!isNewPostFormValid ? `modal__post-input--invalid` : ``}`}
+                                                        onChange={(event) => handleInputForm(event, setPostTitleInput)}
                                                     />
                                                 </div>
 
@@ -127,6 +269,7 @@ function Navbar() {
                                                     <textarea
                                                         placeholder="Digite o conteúdo do post"
                                                         className={`modal__post-input ${!isNewPostFormValid ? `modal__post-input--invalid` : ``}`}
+                                                        onChange={(event) => handleInputForm(event, setPostContentInput)}
                                                     />
                                                 </div>
 
@@ -135,11 +278,12 @@ function Navbar() {
                                                     <input
                                                         type="file"
                                                         className="modal__post-input modal__post-input--file"
+                                                        onChange={handlePostImageInput}
                                                     />
                                                 </div>
 
                                                 {!imgUrl && isLoading && (
-                                                    <progress value={progress} max="100" />
+                                                    <progress className="w-full" value={progress} max="100" />
                                                 )}
 
                                                 {imgUrl && !isLoading && (
