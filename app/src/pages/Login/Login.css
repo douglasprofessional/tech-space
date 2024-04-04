@@ -146,13 +146,28 @@ button.signup__form-submit{
     w-full
     bg-orange-200
     rounded-lg
-    enabled:shadow-orange-200/50
-    enabled:hover:shadow-orange-100/40
-    disabled:bg-orange-100
-    disabled:shadow-none
     text-white
     font-semibold
     p-2;
+}
+
+button.login__form-submit:enabled,
+button.signup__form-submit:enabled {
+    @apply
+    shadow-orange-200/50;
+}
+
+button.login__form-submit:enabled:hover,
+button.signup__form-submit:enabled:hover {
+    @apply
+    shadow-orange-100/40;
+}
+
+button.login__form-submit:disabled,
+button.signup__form-submit:disabled {
+    @apply
+    bg-orange-100
+    shadow-none;
 }
 
 .login__form-valid,

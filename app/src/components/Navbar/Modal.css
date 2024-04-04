@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.modal__post{
+    @apply
+    relative
+    w-full
+    z-10;
+}
+
+.modal__post-overlay{
+    @apply
+    fixed
+    inset-0
+    bg-purple-300
+    bg-opacity-75
+    transition-opacity;
+}
+
+.modal__post-wrap{
+    @apply
+    fixed
+    inset-0
+    overflow-y-auto
+    z-10;
+}
+
+.modal__post-content{
+    @apply
+    flex
+    min-h-full
+    items-end
+    justify-center
+    p-4
+    text-center;
+}
+@media(min-width: 640px){
+    .modal__post-content{
+        @apply
+        items-center
+        p-0;
+    }
+}
+
+.modal__post-panel{
+    @apply
+    flex
+    flex-col
+    justify-center
+    h-min;
+}
+
+.modal__post-form{
+    @apply
+    flex
+    flex-col
+    gap-4
+    w-full
+    max-w-[400px]
+    mx-auto
+    bg-purple-100
+    rounded-lg
+    p-8;
+}
+
+.modal__post-group{
+    @apply
+    w-full
+    flex
+    flex-col
+    gap-1;
+}
+
+.modal__post-title{
+    @apply
+    text-3xl
+    text-center
+    dark:text-white
+    font-bold;
+}
+
+.modal__post-label{
+    @apply
+    w-full
+    text-white
+    text-left;
+}
+
+.modal__post-input{
+    @apply
+    w-full
+    rounded-lg
+    text-white
+    bg-purple-200
+    p-2
+    border-2
+    border-purple-300
+    focus:bg-orange-200
+    focus:outline-none
+    focus:placeholder-transparent;
+}
+
+.modal__post-input--invalid{
+    @apply
+    bg-red-700
+    border-red-700
+    text-white;
+}
+
+.modal__post-input--file{
+    @apply
+    cursor-pointer;
+}
+
+.modal__post-thumbnail{}
+
+.modal__post-submit[type='submit']{
+    @apply
+    w-full
+    py-2
+    bg-orange-200
+    text-white
+    font-semibold
+    rounded-lg;
+}
+.modal__post-submit[type='submit']:disabled {
+    @apply
+    bg-orange-100;
+}
+
+.modal__post-cancel[type='button']{
+    @apply
+    w-full
+    py-2
+    bg-red-700
+    text-white
+    font-semibold
+    rounded-lg;
+}
+.modal__post-cancel[type='button']:disabled {
+    @apply
+    bg-red-500;
+}

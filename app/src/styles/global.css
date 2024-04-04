@@ -8,3 +8,14 @@ body{
     text-gray-100;
     -webkit-font-smoothing: antialiased;
 }
+
+.container{
+    @apply
+    w-full
+    max-w-screen-xl
+    mx-auto;
+}
+
+.transition{
+    transition: all .2s ease-in-out;
+}
