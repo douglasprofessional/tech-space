@@ -46,7 +46,7 @@ function Navbar() {
 
     const { email } = useContext(UserEmailContext)
 
-    const handleSignOut = async() => {
+    const handleSignOut = async(): Promise<void> => {
         await signOut(auth)
         .then(() => toast.success('Logout feito com sucesso!'))
         .catch(() => toast.error('Ocorreu um erro, tente novamente!'))
@@ -55,7 +55,7 @@ function Navbar() {
     const handleInputForm = (
         event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
         state: React.Dispatch<React.SetStateAction<string>>
-    ) => {
+    ): void => {
         const eventTarget = event.currentTarget as HTMLInputElement
         const eventValue = eventTarget.value
 
@@ -64,7 +64,7 @@ function Navbar() {
 
     const handlePostImageInput = (
         event: React.FormEvent<HTMLInputElement>
-    ) => {
+    ): void => {
         const eventTarget = event.target as HTMLInputElement
         const file: File | null = eventTarget.files && eventTarget.files[0]
 
@@ -73,7 +73,7 @@ function Navbar() {
 
     const handleCreateNewPost = (
         event: React.FormEvent<HTMLFormElement>
-    ) => {
+    ): void => {
         event.preventDefault()        
 
         setIsLoading(true)
@@ -130,7 +130,9 @@ function Navbar() {
                                 setPostContentInput('')
                                 setImgUrl('')
                                 setProgress(0)
+                                setIsNewPostFormValid(true)
                                 setOpenModal(false)
+                                setPostImgFile(null)
 
                                 toast.success('Post criado com sucesso!')
                             })
@@ -143,6 +145,7 @@ function Navbar() {
                                 setImgUrl('')
                                 setProgress(0)
                                 setOpenModal(false)
+                                setPostImgFile(null)
 
                                 toast.success('Erro ao criar um post, tente novamente!')
                             })
@@ -166,6 +169,18 @@ function Navbar() {
         const currentYear = date.getFullYear()
 
         return `${currentDay}/${currentMounth}/${currentYear}`
+    }
+
+    const handleCloseModal = (): void => {
+        setIsLoading(false)    
+        setPostAuthorInput('')
+        setPostTitleInput('')
+        setPostContentInput('')
+        setImgUrl('')
+        setProgress(0)
+        setIsNewPostFormValid(true)
+        setOpenModal(false)
+        setPostImgFile(null)
     }
 
     return (
@@ -212,7 +227,7 @@ function Navbar() {
                     as="div"
                     className="modal__post"
                     initialFocus={cancelButtonRef}
-                    onClose={setOpenModal}
+                    onClose={handleCloseModal}
                     >
                         <Transition.Child
                             as={Fragment}
@@ -282,7 +297,7 @@ function Navbar() {
                                                     <label className="modal__post-label">Capa</label>
                                                     <input
                                                         type="file"
-                                                        className="modal__post-input modal__post-input--file"
+                                                        className={`modal__post-input modal__post-input--file ${!isNewPostFormValid ? `modal__post-input--invalid` : ``}`}
                                                         onChange={handlePostImageInput}
                                                     />
                                                 </div>
@@ -307,7 +322,7 @@ function Navbar() {
                                                     type="button"
                                                     disabled={isLoading}
                                                     className="modal__post-cancel"
-                                                    onClick={() => setOpenModal(false)}
+                                                    onClick={handleCloseModal}
                                                     >
                                                     Cancelar
                                                 </button>
