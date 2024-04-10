@@ -54,7 +54,7 @@ function Login(){
         const eventTarget = event.currentTarget as HTMLInputElement
         const eventValue = eventTarget.value
 
-        eventValue && state(eventValue)
+        state(eventValue)
     }
 
     const handleExecuteLogin = async (

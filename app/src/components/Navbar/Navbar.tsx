@@ -1,7 +1,8 @@
 import React, { 
     useState, 
     useRef, 
-    Fragment 
+    Fragment, 
+    useContext
 } from "react"
 
 import { addDoc, collection } from "firebase/firestore"
@@ -16,6 +17,8 @@ import {
     db, 
     storage 
 } from "../../firebase/firebaseConnection"
+
+import UserEmailContext from "../../contexts/UserEmail"
 
 import { toast } from "react-toastify"
 import { 
@@ -41,6 +44,8 @@ function Navbar() {
 
     const cancelButtonRef = useRef(null)
 
+    const { email } = useContext(UserEmailContext)
+
     const handleSignOut = async() => {
         await signOut(auth)
         .then(() => toast.success('Logout feito com sucesso!'))
@@ -54,7 +59,7 @@ function Navbar() {
         const eventTarget = event.currentTarget as HTMLInputElement
         const eventValue = eventTarget.value
 
-        eventValue && state(eventValue)
+        state(eventValue)
     }
 
     const handlePostImageInput = (
@@ -112,7 +117,7 @@ function Navbar() {
                                 title: postTitleInput,
                                 content: postContentInput,
                                 imageUrl: url,
-                                userEmail: 'teste1@teste.com',
+                                userEmail: email,
                                 creationDate: currentDate
                             }
 
