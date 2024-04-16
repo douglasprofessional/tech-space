@@ -117,8 +117,6 @@
     cursor-pointer;
 }
 
-.modal__post-thumbnail{}
-
 .modal__post-submit[type='submit']{
     @apply
     w-full

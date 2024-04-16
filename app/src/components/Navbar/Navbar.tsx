@@ -18,6 +18,8 @@ import {
     storage 
 } from "../../firebase/firebaseConnection"
 
+import { CollectionsFirebase } from "../../models/enums/collectionsFirebase"
+
 import UserEmailContext from "../../contexts/UserEmail"
 
 import { toast } from "react-toastify"
@@ -31,7 +33,7 @@ import { Post } from "../../models/interfaces/Post"
 import "./Navbar.css"
 import "./Modal.css"
 
-function Navbar() {
+function Navbar({handleGetPosts}: {handleGetPosts: () => void}) {
     const [isLoading, setIsLoading] = useState(false)
     const [openModal, setOpenModal] = useState(false)
     const [isNewPostFormValid, setIsNewPostFormValid] = useState(true)
@@ -81,11 +83,105 @@ function Navbar() {
         if(
             postAuthorInput.trim().length > 0 && 
             postTitleInput.trim().length > 0 && 
-            postContentInput.trim().length > 0
+            postContentInput.trim().length > 0 && 
+            postImgFile !== null
         ){
             setIsNewPostFormValid(true)
+
+            const storageRef = ref(storage, `images/${postImgFile.name}`)
+            const uploadTask = uploadBytesResumable(storageRef, postImgFile)
+    
+            uploadTask.on(
+                "state_changed",
+                (snapshot) => { // isto é como um .then
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                    
+                    setProgress(progress)
+                },
+                () => { // isto é como um .catch
+                    toast.error('Ocorreu um erro!')
+                },
+                async () => {
+                    void(
+                        await getDownloadURL(uploadTask.snapshot.ref)
+                        .then(async (url) => {
+                            if(url){
+                                setImgUrl(url)
+    
+                                /**
+                                 * Os passos abaixo são para criar uma nova
+                                 * collection no firebase para criação de posts
+                                 */
+    
+                                const currentDate = getCurrentDate()
+    
+                                /**
+                                 * Post é uma interface para postagem;
+                                 * postObject são os dados a serem adicionados na collection
+                                 */
+                                const postObject: Post = {
+                                    author: postAuthorInput,
+                                    title: postTitleInput,
+                                    content: postContentInput,
+                                    imageUrl: url,
+                                    userEmail: email, // props do contexto UserEmailContext
+                                    creationDate: currentDate
+                                }
+    
+                                /**
+                                 * Criando uma postagem, na collection de nome 'posts'
+                                 */
+                                await addDoc(collection(db, CollectionsFirebase.POSTS), postObject)
+                                .then(() => {
+                                    setIsLoading(false)
+    
+                                    setPostAuthorInput('')
+                                    setPostTitleInput('')
+                                    setPostContentInput('')
+                                    setImgUrl('')
+                                    setProgress(0)
+                                    setIsNewPostFormValid(true)
+                                    setOpenModal(false)
+                                    setPostImgFile(null)
+    
+                                    toast.success('Post criado com sucesso!')
+
+                                    // busca a lista de posts atualizada com este post criado acima
+                                    handleGetPosts()
+                                })
+                                .catch(() => {
+                                    setIsLoading(false)
+    
+                                    setPostAuthorInput('')
+                                    setPostTitleInput('')
+                                    setPostContentInput('')
+                                    setImgUrl('')
+                                    setProgress(0)
+                                    setOpenModal(false)
+                                    setPostImgFile(null)
+    
+                                    toast.success('Erro ao criar um post, tente novamente!')
+                                })
+                            }
+    
+                            /**
+                             * Listando posts atualizados
+                             */
+                        })
+                        .catch(() => {
+                            setIsLoading(false)
+    
+                            toast.error('Erro ao fazer upload da imagem!')
+                        })
+                    )
+                }
+            )
+
         } else {
+            setIsLoading(false)
             setIsNewPostFormValid(false)
+
+            toast.warn('Preencha os campos corretamente!')
         }
 
         if(!postImgFile) return

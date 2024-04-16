@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import "react-toastify/ReactToastify.css"
 
 import loginImg from "../../assets/daniel-korpai-HyTwtsk8XqA-unsplash.jpg"
-import { auth } from "../../firebase/firebaseConnection";
+import { auth } from "../../firebase/firebaseConnection"
 import "./Login.css"
 
 function Login(){
@@ -126,13 +126,17 @@ function Login(){
 
         ).then(() => {
 
+            setIsLoading(false)
+
             setDisplayLogin(true)
             setDisplaySignUp(false)
-            setIsLoading(false)
 
             toast.success('Usuário criado!')
 
         }).catch((err: { code: string }) => {
+
+            setIsLoading(false)
+            setIsSignUpFormValid(false)
 
             if (err.code === 'auth/weak-password') {
 
@@ -147,9 +151,6 @@ function Login(){
                 toast.error('Erro ao criar usuário!')
 
             }
-
-            setIsLoading(false)
-            setIsSignUpFormValid(false)
 
         })
         
