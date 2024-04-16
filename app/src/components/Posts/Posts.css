@@ -1,0 +1,10 @@
+.posts{
+    @apply
+    w-full;
+}
+
+.posts__title{}
+
+.posts__list{}
+
+.posts__item{}

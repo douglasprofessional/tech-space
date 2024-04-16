@@ -1,5 +1,6 @@
-import React from "react"
-import { Post } from "../models/interfaces/Post"
+import { Post } from "../../models/interfaces/Post"
+
+import "./Posts.css"
 
 function Posts({ posts }: { posts: Array<Post>}) {
 
@@ -10,21 +11,25 @@ function Posts({ posts }: { posts: Array<Post>}) {
         imageUrl
     }: Post, index: Number, posts: Array<Post>){
         return (
-            <div key={`${index}${title}`}>
+            <li key={`${index}${title}`} className="posts__item">
                 <p>{author}</p>
                 <h1>{title}</h1>
                 <p>{content}</p>
                 <img src={imageUrl} alt={title} />
-            </div>
+            </li>
         )
     }
 
     return (
-        <React.Fragment>
-            <h5>Post component</h5>
+        <div className="posts">
+            <h5 className="posts__title">
+                Post component
+            </h5>
 
-            {posts.map(renderPosts)}
-        </React.Fragment>
+            <ul className="posts__list">
+                {posts.map(renderPosts)}
+            </ul>
+        </div>
     )
 }
 

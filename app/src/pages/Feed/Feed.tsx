@@ -16,7 +16,7 @@ import {
 import { db } from "../../firebase/firebaseConnection"
 
 import { CollectionsFirebase } from "../../models/enums/collectionsFirebase"
-import Posts from "../../components/Posts"
+import Posts from "../../components/Posts/Posts"
 
 function Feed(){
     const [postsList, setPostsList] = useState<Array<Post>>([])
