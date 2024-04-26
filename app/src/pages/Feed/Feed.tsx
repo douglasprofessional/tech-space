@@ -3,6 +3,8 @@ import React,
     useEffect,
     useState 
 } from "react"
+import { toast } from "react-toastify"
+import "react-toastify/ReactToastify.css"
 
 import Navbar from "../../components/Navbar/Navbar"
 
@@ -33,15 +35,13 @@ function Feed(){
                 }
 
                 postsArray.length > 0 && setPostsList(postsArray as Array<Post>)
-
-                console.log('LISTA DE POSTS', postsArray);
                 
             }else{
 
             }
         })
-        .catch((err) => {
-
+        .catch(() => {
+            toast.error('List not updated!')
         })
     }
 

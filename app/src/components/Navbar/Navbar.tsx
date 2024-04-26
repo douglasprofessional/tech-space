@@ -93,12 +93,12 @@ function Navbar({handleGetPosts}: {handleGetPosts: () => void}) {
     
             uploadTask.on(
                 "state_changed",
-                (snapshot) => { // isto é como um .then
+                (snapshot) => {
                     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
                     
                     setProgress(progress)
                 },
-                () => { // isto é como um .catch
+                () => {
                     toast.error('Ocorreu um erro!')
                 },
                 async () => {
@@ -108,29 +108,17 @@ function Navbar({handleGetPosts}: {handleGetPosts: () => void}) {
                             if(url){
                                 setImgUrl(url)
     
-                                /**
-                                 * Os passos abaixo são para criar uma nova
-                                 * collection no firebase para criação de posts
-                                 */
-    
                                 const currentDate = getCurrentDate()
     
-                                /**
-                                 * Post é uma interface para postagem;
-                                 * postObject são os dados a serem adicionados na collection
-                                 */
                                 const postObject: Post = {
                                     author: postAuthorInput,
                                     title: postTitleInput,
                                     content: postContentInput,
                                     imageUrl: url,
-                                    userEmail: email, // props do contexto UserEmailContext
+                                    userEmail: email,
                                     creationDate: currentDate
                                 }
     
-                                /**
-                                 * Criando uma postagem, na collection de nome 'posts'
-                                 */
                                 await addDoc(collection(db, CollectionsFirebase.POSTS), postObject)
                                 .then(() => {
                                     setIsLoading(false)
@@ -146,7 +134,6 @@ function Navbar({handleGetPosts}: {handleGetPosts: () => void}) {
     
                                     toast.success('Post criado com sucesso!')
 
-                                    // busca a lista de posts atualizada com este post criado acima
                                     handleGetPosts()
                                 })
                                 .catch(() => {
@@ -163,10 +150,6 @@ function Navbar({handleGetPosts}: {handleGetPosts: () => void}) {
                                     toast.success('Erro ao criar um post, tente novamente!')
                                 })
                             }
-    
-                            /**
-                             * Listando posts atualizados
-                             */
                         })
                         .catch(() => {
                             setIsLoading(false)
