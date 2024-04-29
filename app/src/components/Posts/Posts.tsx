@@ -11,7 +11,7 @@ function Posts({ posts }: { posts: Array<Post>}) {
         imageUrl,
         creationDate,
         userEmail
-    }: Post, index: Number, posts: Array<Post>){
+    }: Post){
         return (
             <li key={crypto.randomUUID()} className="posts__item transition">
                 {imageUrl && (                  

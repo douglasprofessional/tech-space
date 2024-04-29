@@ -32,11 +32,20 @@
     @apply
     hidden;
 }
+.login__column:last-of-type{
+    @apply
+    px-5;
+}
 /* sm: */
 @media(min-width: 1023px){
     .login__column:first-of-type{
         @apply
-        block;
+        block
+        overflow-hidden;
+    }
+    .login__column:last-of-type{
+        @apply
+        px-0;
     }
 }
 
